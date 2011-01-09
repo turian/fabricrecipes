@@ -46,7 +46,7 @@ def disconnect_all():
             del connections[key]
 
 
-def reboot(wait=10.):
+def reboot(wait=20.):
     """
     Reboot the server, and sleep for wait seconds.
     You can also try fabric.operations.reboot() (http://docs.fabfile.org/0.9.3/api/core/operations.html#fabric.operations.reboot)
