@@ -5,8 +5,29 @@ from fabric.contrib.console import confirm
 import fabric.network
 
 import sys
+import re
+import string
 from os.path import expanduser
 from paramiko.config import SSHConfig
+
+def python_major_version():
+    """
+    Get the Python major version number
+    """
+    pystr = run("python -c 'import platform; print platform.python_version()'")
+    pyre = re.compile("([0-9]+\.[0-9]+)\.[0-9]+")
+    assert pyre.match(pystr)
+    PYTHONMAJORVERSION = pyre.match(pystr).group(1)
+    print >> sys.stderr, "Remote PYTHONMAJORVERSION = %s" % PYTHONMAJORVERSION
+    return PYTHONMAJORVERSION
+
+def perl_version():
+    """
+    Get the Perl version number
+    """
+    PERLVERSION = string.strip(run("perl -v | awk '/This/ {print $4}' | sed -e 's/v//'"))
+    print >> sys.stderr, "Remote PERLVERSION = %s" % PERLVERSION
+    return PERLVERSION
 
 def disconnect_all():
     """
@@ -28,6 +49,7 @@ def disconnect_all():
 def reboot(wait=10.):
     """
     Reboot the server, and sleep for wait seconds.
+    You can also try fabric.operations.reboot() (http://docs.fabfile.org/0.9.3/api/core/operations.html#fabric.operations.reboot)
     """
     run('sudo /sbin/shutdown -r now')
     disconnect_all()
@@ -62,3 +84,22 @@ def annotate_hosts_with_ssh_config_info():
             for host in env.hosts]
         env.key_filename = [key for key in keys if key is not None]
         env.hosts = [hostinfo(host, config) for host in env.hosts]
+
+def sshagent_run(cmd):
+    """
+    Helper function.
+    Runs a command with SSH agent forwarding enabled.
+    
+    Note:: Fabric (and paramiko) can't forward your SSH agent. 
+    This helper uses your system's ssh to do so.
+
+    Code from: http://lincolnloop.com/blog/2009/sep/22/easy-fabric-deployment-part-1-gitmercurial-and-ssh/
+    """
+
+    for h in env.hosts:
+        try:
+            # catch the port number to pass to ssh
+            host, port = h.split(':')
+            local('ssh -p %s -A %s "%s"' % (port, host, cmd))
+        except ValueError:
+            local('ssh -A %s "%s"' % (h, cmd))
