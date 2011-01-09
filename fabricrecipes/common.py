@@ -4,6 +4,7 @@ from fabric.contrib.console import confirm
 
 import fabric.network
 
+import sys
 from os.path import expanduser
 from paramiko.config import SSHConfig
 
@@ -12,11 +13,11 @@ def disconnect_all():
     disconnect from all hosts
     """
     try:
-        disconnect_all()
+        fabric.network.disconnect_all()
     except Exception, e:
-        print >> sys.stderr, type(e), e, sys.exc_info()[0]
+        print >> sys.stderr, type(e), e
         print >> sys.stderr, "disconnect_all() didn't work (perhaps fabric < 0.9.4, http://docs.fabfile.org/0.9.3/api/core/network.html#fabric.network.disconnect_all)"
-        print >> sys.stderr, "running old-skool disconnect_all hack: http://docs.fabfile.org/0.9.3/api/core/network.html#fabric.network.disconnect_all"
+        print >> sys.stderr, "running old-skool disconnect_all hack: http://docs.fabfile.org/0.9.3/usage/library.html?highlight=wait#disconnecting"
 
         from fabric.state import connections
         for key in connections.keys():
@@ -31,8 +32,10 @@ def reboot(wait=10.):
     run('sudo /sbin/shutdown -r now')
     disconnect_all()
 
+    print >> sys.stderr, "Sleeping %f seconds after reboot..." % wait
     import time
     time.sleep(wait)
+    print >> sys.stderr, "...done sleeping %f seconds after reboot" % wait
 
 def annotate_hosts_with_ssh_config_info():
     """
