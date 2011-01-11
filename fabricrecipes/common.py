@@ -29,6 +29,24 @@ def perl_version():
     print >> sys.stderr, "Remote PERLVERSION = %s" % PERLVERSION
     return PERLVERSION
 
+def install_pip():
+    sudo("easy_install -U pip")
+
+def install_python_package_with_pip(package, prefix):
+    # TODO: Use pip-install alias
+    PIPINSTALL = 'pip install -U --src=%s --install-option="--prefix=%s"' % (join(prefix, "src"), prefix)
+    run("%s %s" % (PIPINSTALL, prefix))
+
+def install_python_github_package_with_pip(package, prefix):
+    # TODO: Use pip-install alias
+    PIPINSTALL = 'pip install -U --src=%s --install-option="--prefix=%s" -e' % (join(prefix, "src"), prefix)
+    run("%s %s" % (PIPINSTALL, prefix))
+
+def install_python_package_with_easy_install(package, prefix):
+    # TODO: Use pip-install alias
+    EASYINSTALL = 'easy_install -U --prefix=%s' % prefix
+    run("%s jinja2" % EASYINSTALL)
+
 def disconnect_all():
     """
     disconnect from all hosts
