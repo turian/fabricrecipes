@@ -7,7 +7,7 @@ import fabric.network
 import sys
 import re
 import string
-from os.path import expanduser
+from os.path import expanduser, join
 from paramiko.config import SSHConfig
 
 def python_major_version():
