@@ -35,17 +35,17 @@ def install_pip():
 def install_python_package_with_pip(package, prefix):
     # TODO: Use pip-install alias
     PIPINSTALL = 'pip install -U --src=%s --install-option="--prefix=%s"' % (join(prefix, "src"), prefix)
-    run("%s %s" % (PIPINSTALL, prefix))
+    run("%s %s" % (PIPINSTALL, package))
 
 def install_python_github_package_with_pip(package, prefix):
     # TODO: Use pip-install alias
     PIPINSTALL = 'pip install -U --src=%s --install-option="--prefix=%s" -e' % (join(prefix, "src"), prefix)
-    run("%s %s" % (PIPINSTALL, prefix))
+    run("%s %s" % (PIPINSTALL, package))
 
 def install_python_package_with_easy_install(package, prefix):
     # TODO: Use pip-install alias
     EASYINSTALL = 'easy_install -U --prefix=%s' % prefix
-    run("%s jinja2" % EASYINSTALL)
+    run("%s %s" % (EASYINSTALL, package))
 
 def disconnect_all():
     """
