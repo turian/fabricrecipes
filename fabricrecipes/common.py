@@ -32,6 +32,9 @@ def perl_version():
 def install_pip():
     sudo("easy_install -U pip")
 
+def homedir():
+    return expanduser("~")
+
 def install_python_package_with_pip(package, prefix):
     # TODO: Use pip-install alias
     PIPINSTALL = 'pip install -U --src=%s --install-option="--prefix=%s"' % (join(prefix, "src"), prefix)
