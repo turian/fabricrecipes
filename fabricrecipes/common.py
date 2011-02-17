@@ -29,6 +29,9 @@ def perl_version():
     print >> sys.stderr, "Remote PERLVERSION = %s" % PERLVERSION
     return PERLVERSION
 
+def is32bit():
+    return string.strip(run("uname -m")) in ["i686","i586","i486","i386"]
+
 def install_pip():
     sudo("easy_install -U pip")
 
