@@ -53,6 +53,9 @@ def install_python_package_with_easy_install(package, prefix):
     EASYINSTALL = 'easy_install -U --prefix=%s' % prefix
     run("%s %s" % (EASYINSTALL, package))
 
+def hostname_is_ec2(hostname):
+    return hostname.find(".amazonaws.com") != -1
+
 def disconnect_all():
     """
     disconnect from all hosts
@@ -70,7 +73,7 @@ def disconnect_all():
             del connections[key]
 
 
-def reboot(wait=20.):
+def reboot(wait=40.):
     """
     Reboot the server, and sleep for wait seconds.
     You can also try fabric.operations.reboot() (http://docs.fabfile.org/0.9.3/api/core/operations.html#fabric.operations.reboot)
